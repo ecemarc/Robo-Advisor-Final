@@ -11,6 +11,10 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import Mail, From, To, Subject, PlainTextContent, HtmlContent, SendGridException
+
 
 import datetime
 now = datetime.datetime.now()
@@ -20,11 +24,16 @@ load_dotenv()  # > loads contents of the .env file into the script's environment
 
 
 api_key = os.getenv("ALPHAVANTAGE_API_KEY")
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+MY_ADDRESS = os.environ.get("MY_EMAIL_ADDRESS")
 
+# > <class 'sendgrid.sendgrid.SendGridAPIClient>
+client = SendGridAPIClient(SENDGRID_API_KEY)
 
 # print(api_key)
 
 # REFERENCED https://github.com/prof-rossetti/intro-to-python/blob/master/exercises/api-client/solution.py
+
 
 def getting_url(symbol_input):
     symbol_input = selected_stock
@@ -44,7 +53,7 @@ def process_ticker(symbol):
 
 def transform_response(parsed_response):
     time_series_info = parsed_response["Time Series (Daily)"]
-    all_rows = []  # professor reosetti's robo example demo
+    rows = []  # professor reosetti's robo example demo
     for date, daily_prices in time_series_info.items():
         row = {
             "timestamp": date,
@@ -54,20 +63,39 @@ def transform_response(parsed_response):
             "close": float(daily_prices["4. close"]),
             "volume": int(daily_prices["5. volume"])
         }
-        all_rows.append(row)
-    return all_rows
+        rows.append(row)
+    return rows
+
+
+def write_to_csv(rows, csv_file_Path):
+    csv_headers = ["timestamp", "open", "high", "low", "close", "volume"]
+    with open(csv_file_path, "w") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=csv_headers)
+        writer.writeheader()  # uses fieldnames set above
+        for row in rows:
+            writer.writerow(row)
+
+    return True
+
+    # csv_file_path = "data/prices.csv"  # a relative filepath
+
+    # timestamp, open, high, low, close, volume
+
+
+def usd_price(last_closing_price):
+    return f"${last_closing_price:,.2f}"  # usd conversion
 
 
 if __name__ == "__main__":  # revisited rock-paper and input module
     while True:
         selected_stock = input(
             "Please enter the company symbol to access information: ")
-        # fixed to acccept both lower and upper level
+        # fixed to acccept both lower and upper level alhabetical values, length of 4 or less.
         if len(selected_stock) > 4 or not re.match("^[A-Za-z]*$", selected_stock):
             print("Invalid ticker, please Re-enter:")
         else:
             process_ticker(selected_stock)
-        if "KeyError" in process_ticker(selected_stock):
+        if "error" in process_ticker(selected_stock):
             print("Stock could not be found, please enter a valid ticker!")
             # KEYerror code still not working!
         else:
@@ -76,7 +104,8 @@ if __name__ == "__main__":  # revisited rock-paper and input module
     # followed Professor Rosetti's guided video
     parsed_response = process_ticker(selected_stock)
     last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
-    row = transform_response(parsed_response)
+    rows = transform_response(parsed_response)  # define for write.csv
+    row = transform_response(parsed_response)  # define for plotting
     time_series = parsed_response["Time Series (Daily)"]
 
     dates = list(time_series.keys())
@@ -85,9 +114,6 @@ if __name__ == "__main__":  # revisited rock-paper and input module
     latest = dates[0]
 
     last_closing_price = time_series[latest]["4. close"]
-
-    def usd_price(last_closing_price):
-        return f"${last_closing_price:,.2f}"  # > $12,000.71
 
     # breakpoint()
 
@@ -103,10 +129,13 @@ if __name__ == "__main__":  # revisited rock-paper and input module
     recent_highest = max(recent_highs)  # creating a list and
     recent_lowest = min(recent_lows)
 
-    # csv_file_path = "data/prices.csv"  # a relative filepath
     csv_file_path = os.path.join(os.path.dirname(
-        __file__), "..", "data", "prices.csv")
-    # timestamp, open, high, low, close, volume
+        __file__), "..", "data", "prices.csv")  # ESTABLISHING CSV FILEPATH
+
+    write_to_csv(rows, csv_file_path)
+
+    formatted_csv_filepath = csv_file_path.split(
+        "..")[1]  # adopted from Prof Rosetti
 
     print("*****************************************************")
     # referenced geeksforgeeks upper-lower input applications
@@ -130,7 +159,7 @@ if __name__ == "__main__":  # revisited rock-paper and input module
     while True:
         line_graph = input(
             "IF A GRAPH WOULD BE HELPFUL PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO CONTINUE FOR OTHER OPTIONS: ")
-        if line_graph == "YES" or "yes":
+        if line_graph == "YES" or line_graph == "yes":
             print("*****************************************************")
             print(
                 "AFTER VIEWING THE GRAPH, FOR MORE OPTIONS INCLUDING FREE ADVICE PLEASE EXIT WINDOW.")
@@ -147,7 +176,8 @@ if __name__ == "__main__":  # revisited rock-paper and input module
 
             #  used https://matplotlib.org/3.1.1/gallery/pyplots/dollar_ticks.html for formatting to dollar sign
             formatter = ticker.FormatStrFormatter('$%1.2f')
-            formatter2 = ticker.FuncFormatter(lambda x, p: format(int(x), ','))
+            formatter2 = ticker.FuncFormatter(
+                lambda x, p: format(int(x), ','))
             # used https://stackoverflow.com/questions/51734218/formatting-y-axis-matplotlib-with-thousands-separator-and-font-size
             ax.yaxis.set_major_formatter(formatter2)
             ax.yaxis.set_major_formatter(formatter)
@@ -161,7 +191,6 @@ if __name__ == "__main__":  # revisited rock-paper and input module
             plt.title('Last Quarter Prices: ' +
                       selected_stock.upper(), fontsize=18)
             plt.show()
-
             break
         else:
             break
@@ -169,7 +198,7 @@ if __name__ == "__main__":  # revisited rock-paper and input module
     while True:
         advice_answer = input(
             "WOULDYOU LIKE US TO EVALUATE THE RISK FOR YOU? PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO CONTINUE FOR OTHER OPTIONS: ")
-        if advice_answer == "YES" or "yes":
+        if advice_answer == "YES" or advice_answer == "yes":
             if (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) >= 0.30:
                 print("*****************************************************")
                 print(
@@ -203,3 +232,34 @@ if __name__ == "__main__":  # revisited rock-paper and input module
 
         else:
             exit()
+
+to_emails = [To("em4063@ster.nyu.edu")]
+subject = "E-Z Stock Acticity"
+# html_content = "Hello, thank you for visiting us today. Below please find your search results for today:"
+message = Mail(from_email=MY_ADDRESS, to_emails=MY_ADDRESS,
+               subject=subject, html_content=html_content)
+
+
+try:
+    response = client.send(message)
+
+    print("*****************************************************")
+    # referenced geeksforgeeks upper-lower input applications
+    print("SELECTED SYMBOL:" + selected_stock.upper())
+    print("*****************************************************")
+    print("REQUESTING STOCK MARKET DATA...")
+    print("REQUEST TIME: " + " " + now.strftime("%Y-%m-%d %H:%M:%S"))
+
+    print("*****************************************************")
+    print(f"LATEST DAY: {last_refreshed}")
+    print(f"LATEST CLOSE: {usd_price(float(last_closing_price))}")
+    print(f"RECENT HIGH: {usd_price(float(recent_highest))}")
+    print(f"RECENT LOW: {usd_price(float(recent_lowest))}")
+
+    print("*****************************************************")
+    print("YOU CAN ACCESS DATA VIA:" + str(csv_file_path))
+    print("*****************************************************")
+    print("*****************************************************")
+    print("*****************************************************")
+except Exception as e:
+    print("OOPS", e.message)
