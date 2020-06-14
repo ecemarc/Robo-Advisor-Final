@@ -91,9 +91,9 @@ if __name__ == "__main__":  # revisited rock-paper and input module
             print("Invalid ticker, please Re-enter:")
         else:
             process_ticker(selected_stock)
-        if "KeyError" in process_ticker(selected_stock):
+        if selected_stock process_ticker(selected_stock):
             print("Stock could not be found, please enter a valid ticker!")
-            # tried to replicate error checking from hiepnguneyen and megc on Github but is not working
+
         else:
             break
 
@@ -150,3 +150,41 @@ if __name__ == "__main__":  # revisited rock-paper and input module
     print("*****************************************************")
     print("*****************************************************")
     print("*****************************************************")
+
+    while True:
+        advice_answer = input(
+            "WOULDYOU LIKE US TO EVALUATE THE RISK FOR YOU? PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO CONTINUE FOR OTHER OPTIONS: ")
+        if advice_answer == "YES" or "yes":
+            if (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) >= 0.30:
+                print("*****************************************************")
+                print(
+                    "INVESTMENT ADVICE: THIS IS A HIGH RISK STOCK. PLEASE BE CAUTIOUS! ")
+                print("*****************************************************")
+                print(
+                    "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
+                print("******************************************************")
+            elif (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) >= 0.20:
+                print("******************************************************")
+                print("INVESTMENT ADVICE: IN NORMAL CISRCUMSTANCES THIS WOULD BE CONSIDERED A HIGH RISK STOCK, CONSIDERING TODAY'S VOLATILE MARKETS, IT IS MEDIUM RISK, STILL BE CAUTIOUS! ")
+                print("******************************************************")
+                print(
+                    "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
+                print("******************************************************")
+            elif (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) < 0.11:
+                print("******************************************************")
+                print("iNVESTMENT ADVICE: THIS IS MED-LOW RISK STOCK. ")
+                print("******************************************************")
+                print(
+                    "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
+                print("*******************************************************")
+            elif (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) < 0.6:
+                print("******************************************************")
+                print("INVESTMENT ADVICE: THIS IS LOW RISK STOCK ")
+                print("******************************************************")
+                print(
+                    "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
+                print("*******************************************************")
+                break
+
+        else:
+            exit()
