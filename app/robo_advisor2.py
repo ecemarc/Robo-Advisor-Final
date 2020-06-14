@@ -1,21 +1,27 @@
-# app/robo_advisor.py
-# my-secure-project/my_script.py
-import json
-from dotenv import load_dotenv
 import os
-import csv
+from dotenv import load_dotenv
 import requests
-# print(os.getenv("ALPHAVANTAGE_API_KEY"))  # > None
-
-load_dotenv()  # > loads contents of the .env file into the script's environment
-
-
-api_key = os.getenv("ALPHAVANTAGE_API_KEY")
+import json  # json is similar to dict or lists we have been using
+import csv
 
 
+print(os.environ.get("ALPHAVANTAGE_KEY"))
+load_dotenv()  # NEEDS TO GO BEFORE ACCESSING KEY
+
+
+#
+# INFO INPUTS
+#
+#
+
+# use request package to get a response, then convert the string to a dictionary or a list so you can work on it.
+# check apis.md in prof. repo
+api_key = os.environ.get("ALPHAVANTAGE_KEY")
 print(api_key)
 
-symbol = "IBM"
+
+symbol = "IBM"  # USER TO CHOOSE THIS!
+
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
 response = requests.get(request_url)
 print(type(response))  # class
@@ -34,9 +40,9 @@ time_series = parsed_response["Time Series (Daily)"]
 dates = list(time_series.keys())
 
 # taking the "0" from dates list "2020-06-05 14:50:00"   //is latest date first?? MAKE SURE
-latest = dates[0]
+latest_5min = dates[0]
 
-last_closing_price = time_series[latest]["4. close"]
+last_closing_price = time_series[latest_5min]["4. close"]
 
 
 def usd_price(last_closing_price):
@@ -105,20 +111,3 @@ print("-------------------------")
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
-
-# print("-------------------------")
-# print("SELECTED SYMBOL: XYZ")
-# print("-------------------------")
-# print("REQUESTING STOCK MARKET DATA...")
-# print("REQUEST AT: 2018-02-20 02:00pm")
-# print("-------------------------")
-# print("LATEST DAY: 2018-02-20")
-# print("LATEST CLOSE: $100,000.00")
-# print("RECENT HIGH: $101,000.00")
-# print("RECENT LOW: $99,000.00")
-# print("-------------------------")
-# print("RECOMMENDATION: BUY!")
-# print("RECOMMENDATION REASON: TODO")
-# print("-------------------------")
-# print("HAPPY INVESTING!")
-# print("-------------------------")
