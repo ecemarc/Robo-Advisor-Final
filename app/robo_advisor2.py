@@ -39,14 +39,12 @@ def process_ticker(symbol):
     response = requests.get(request_url)
     # parse use the json module called jason.loads to change response.text to dictionary
     parsed_response = json.loads(response.text)  # class to dict
-    return parsed_response
-
-    # professor Rosetti's guided solutions
+    return parsed_response  # define parsed response
 
 
 def transform_response(parsed_response):
     time_series_info = parsed_response["Time Series (Daily)"]
-    all_rows = []
+    all_rows = []  # professor reosetti's robo example demo
     for date, daily_prices in time_series_info.items():
         row = {
             "timestamp": date,
@@ -60,43 +58,18 @@ def transform_response(parsed_response):
     return all_rows
 
 
-# def write_csv(rows, csv_file_path):
-#     with open(csv_file_path, "w") as csv_file:  # "w" means "open the file for writing"
-
-#         writer = csv.DictWriter(csv_file, fieldnames=csv_column_headers)
-#         writer.writeheader()  # uses fieldnames set above
-#         for row in all_rows:
-#             writer.writeheader()
-#     return True
-#     # for date in dates:
-#     #     minute_prices = time_series[date]
-
-#     writer.writerow({
-#         "timestamp": date,
-#         "open": minute_prices["1. open"],
-#         "high": minute_prices["2. high"],
-#         "low": minute_prices["3. low"],
-#         "close": minute_prices["4. close"],
-#         "volume": minute_prices["5. volume"]
-    # })
-
-# print(type(response))  # class
-# print(response.status_code)  # we got 200, sso good to go
-# print(response.text)  # string-need to import json module
-
-
 if __name__ == "__main__":  # revisited rock-paper and input module
     while True:
         selected_stock = input(
             "Please enter the company symbol to access information: ")
-        # stockoverflow
-        if len(selected_stock) > 4 or not re.match("^[A-Z]*$", selected_stock):
+        # fixed to acccept both lower and upper level
+        if len(selected_stock) > 4 or not re.match("^[A-Za-z]*$", selected_stock):
             print("Invalid ticker, please Re-enter:")
         else:
             process_ticker(selected_stock)
         if "KeyError" in process_ticker(selected_stock):
             print("Stock could not be found, please enter a valid ticker!")
-            # tried to replicate error checking from hiepnguneyen and megc on Github but is not working
+            # KEYerror code still not working!
         else:
             break
 
