@@ -7,6 +7,9 @@ import csv
 import requests
 
 import datetime
+import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 
 import datetime
@@ -91,9 +94,9 @@ if __name__ == "__main__":  # revisited rock-paper and input module
             print("Invalid ticker, please Re-enter:")
         else:
             process_ticker(selected_stock)
-        if selected_stock process_ticker(selected_stock):
+        if "KeyError" in process_ticker(selected_stock):
             print("Stock could not be found, please enter a valid ticker!")
-
+            # tried to replicate error checking from hiepnguneyen and megc on Github but is not working
         else:
             break
 
@@ -150,6 +153,45 @@ if __name__ == "__main__":  # revisited rock-paper and input module
     print("*****************************************************")
     print("*****************************************************")
     print("*****************************************************")
+
+    while True:
+        line_graph = input(
+            "IF A GRAPH WOULD BE HELPFUL PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO CONTINUE FOR OTHER OPTIONS: ")
+        if line_graph == "YES" or "yes":
+            print("*****************************************************")
+            print(
+                "AFTER VIEWING THE GRAPH, FOR MORE OPTIONS INCLUDING FREE ADVICE PLEASE EXIT WINDOW.")
+            print("*****************************************************")
+            closing_prices = []
+            for cp in row:
+                closing_prices.append(cp["close"])
+            graph_dates = sorted(dates)
+            fig, ax = plt.subplots()
+
+            # used https://matplotlib.org/3.1.1/gallery/ticks_and_spines/tick-locators.html for linearlocator
+            ax.xaxis.set_major_locator(plt.LinearLocator(12))
+            ax.yaxis.set_major_locator(plt.LinearLocator(6))
+
+            #  used https://matplotlib.org/3.1.1/gallery/pyplots/dollar_ticks.html for formatting to dollar sign
+            formatter = ticker.FormatStrFormatter('$%1.2f')
+            formatter2 = ticker.FuncFormatter(lambda x, p: format(int(x), ','))
+            # used https://stackoverflow.com/questions/51734218/formatting-y-axis-matplotlib-with-thousands-separator-and-font-size
+            ax.yaxis.set_major_formatter(formatter2)
+            ax.yaxis.set_major_formatter(formatter)
+
+            plt.plot(graph_dates, closing_prices)
+            # used the Charts Excersize in class for line_graph
+
+            plt.xlabel('Date', fontsize=12)
+            plt.ylabel('Daily Close Price', fontsize=12)
+            # referenced geeksforgeeks upper-lower input applications
+            plt.title('Last Quarter Prices: ' +
+                      selected_stock.upper(), fontsize=18)
+            plt.show()
+
+            break
+        else:
+            break
 
     while True:
         advice_answer = input(
