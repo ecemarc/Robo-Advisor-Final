@@ -1,13 +1,7 @@
 
+def main():  # DDEFINE FOR OPTION TO START OVER
 
-
-
-def main():
-
-# my-secure-project/my_script.py
-
-    
-
+    # my-secure-project/my_script.py
 
     import requests
     import csv
@@ -25,14 +19,11 @@ def main():
     import matplotlib.ticker as ticker
 
     now = datetime.datetime.now()
-    # print(os.getenv("ALPHAVANTAGE_API_KEY"))  # > None
 
     load_dotenv()  # > loads contents of the .env file into the script's environment
 
+    # getting the key from .env
     api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
-  
-
-    # print(api_key)
 
     # REFERENCED https://github.com/prof-rossetti/intro-to-python/blob/master/exercises/api-client/solution.py
 
@@ -46,10 +37,8 @@ def main():
     # followed Guided Screen Cast
 
     # def process_ticker(selected_stock):
-    #     request_url = getting_url(symbol)  # requesting
-
-    #     # parse use the json module called jason.loads to change response.text to dictionary
-    #     e  # define parsed response
+    #     request_url = getting_url(symbol)  # this did not work, switched to the next approach
+    # need to change parsed_response to dictionaary
 
     def change_response(parsed_response):
         time_series = parsed_response["Time Series (Daily)"]
@@ -79,11 +68,7 @@ def main():
 
         return True
 
-        # csv_file_path = "data/prices.csv"  # a relative filepath
-
-        # timestamp, open, high, low, close, volume
-
-    # USER INPUT
+    # USER INPUT-VALIDATING THE INPUT
 
     if __name__ == "__main__":  # revisited rock-paper and input module
         while True:
@@ -95,20 +80,12 @@ def main():
             else:
                 getting_url(symbol_input)
 
+            # resolved the error isse by entering invalid ticker in place of demo on browser and saw "Error Message
             if "Error Message" in getting_url(symbol_input):
                 print("Stock could not be found, please enter a valid ticker!")
-                # tried to replicate error checking from hiepnguneyen and megc on Github but is not working
+
             else:
                 break
-            #ERROR NOT WORKING
-            # try:
-            #     data = process_ticker(selected_stock)
-            # except KeyError:
-            #     print("Stock could not be found, please enter a valid ticker!")
-            # # KEYerror code still not working!
-            # else:
-            #     break
-            
 
         # followed Professor Rosetti's guided video
         parsed_response = getting_url(symbol_input)
@@ -129,7 +106,7 @@ def main():
         # breakpoint()
 
         recent_highs = []  # creating a list of highs to find the highest
-        recent_lows = []
+        recent_lows = []  # creating a list of lows to find the highest
 
         for date in dates:
             recent_high = time_series[date]["2. high"]
@@ -137,7 +114,7 @@ def main():
             recent_low = time_series[date]["3. low"]
             recent_lows.append(float(recent_low))
 
-        recent_highest = max(recent_highs)  # creating a list and
+        recent_highest = max(recent_highs)
         recent_lowest = min(recent_lows)
 
         csv_file_path = os.path.join(os.path.dirname(
@@ -146,7 +123,7 @@ def main():
         write_to_csv(rows, csv_file_path)
 
         f_csv_filepath = csv_file_path.split(
-            "..")[1]  # adopted from Prof Rosetti
+            "..")[1]  # adopted from Prof Rosetti example
 
         print("*****************************************************")
         # referenced geeksforgeeks upper-lower input applications
@@ -167,6 +144,8 @@ def main():
         print("*****************************************************")
         print("*****************************************************")
 
+        # VALIDATING INPUT FOR GRAPH
+
         while True:
             line_graph = input(
                 "IF A GRAPH WOULD BE HELPFUL PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO EXIT: ")
@@ -179,7 +158,7 @@ def main():
                 for cp in row:
                     closing_prices.append(cp["close"])
                 graph_dates = sorted(dates)
-                fig, ax = plt.subplots() #defiins ax variable
+                fig, ax = plt.subplots()  # defiins ax variable
 
                 # used https://matplotlib.org/3.1.1/gallery/ticks_and_spines/tick-locators.html for linearlocator
                 ax.xaxis.set_major_locator(plt.LinearLocator(12))
@@ -205,12 +184,12 @@ def main():
                 break
             else:
                 break
-
+            # VALIDATING INPUT FOR ADVICE
         while True:
             advice_answer = input(
                 "WOULDYOU LIKE US TO EVALUATE THE RISK FOR YOU? PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO CONTINUE FOR OTHER OPTIONS: ")
             if advice_answer == "YES" or advice_answer == "yes":
-                if (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) >= 0.30:
+                if (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) >= 0.30:  # CALCULATION
                     print("*****************************************************")
                     print(
                         "INVESTMENT ADVICE: THIS IS A HIGH RISK STOCK. PLEASE BE CAUTIOUS! ")
@@ -246,11 +225,14 @@ def main():
             else:
                 print("*******************************************************")
                 print(
-                        "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
+                    "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
                 print("*******************************************************")
                 exit()
 
-    restart = input("If you would like to start over please enter YES, otherwise press any other key to exit?")
+    # GOING BACK TO BEGINNING
+
+    restart = input(
+        "If you would like to start over please enter YES, otherwise press any other key to exit?")
     if restart == "yes" or restart == "YES":
         main()
     else:
@@ -261,4 +243,3 @@ def main():
 
 
 main()
-
