@@ -95,7 +95,7 @@ def main():
             else:
                 getting_url(symbol_input)
 
-            if "error" in getting_url(symbol_input):
+            if "Error Message" in getting_url(symbol_input):
                 print("Stock could not be found, please enter a valid ticker!")
                 # tried to replicate error checking from hiepnguneyen and megc on Github but is not working
             else:
