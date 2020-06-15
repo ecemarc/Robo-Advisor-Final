@@ -1,21 +1,25 @@
-# my-secure-project/my_script.py
+
+
+
+
 def main():
 
+# my-secure-project/my_script.py
+
+    import requests
+    import csv
+    import os
     import re
     import json
     from dotenv import load_dotenv
-    import os
-    import csv
-    import requests
-
-    import datetime
-    import matplotlib
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as ticker
 
     from sendgrid import SendGridAPIClient
     from sendgrid.helpers.mail import Mail
     from sendgrid.helpers.mail import Mail, From, To, Subject, PlainTextContent, HtmlContent, SendGridException
+    import datetime
+    import matplotlib
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as ticker
 
     now = datetime.datetime.now()
     # print(os.getenv("ALPHAVANTAGE_API_KEY"))  # > None
@@ -26,7 +30,7 @@ def main():
     SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
     MY_ADDRESS = os.environ.get("MY_EMAIL_ADDRESS")
 
-    # > <class 'sendgrid.sendgrid.SendGridAPIClient>
+    # > < class 'sendgrid.sendgrid.SendGridAPIClient >
     client = SendGridAPIClient(SENDGRID_API_KEY)
 
     # print(api_key)
@@ -34,20 +38,21 @@ def main():
     # REFERENCED https://github.com/prof-rossetti/intro-to-python/blob/master/exercises/api-client/solution.py
 
     def getting_url(symbol_input):
-        symbol_input = selected_stock
+
         request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol_input}&apikey={api_key}"
-        return request_url
+        response = requests.get(request_url)
+        parsed_response = json.loads(response.text)  # class to dict
+        return parsed_response
 
     # followed Guided Screen Cast
 
-    def process_ticker(symbol):
-        request_url = getting_url(symbol)  # requesting
-        response = requests.get(request_url)
-        # parse use the json module called jason.loads to change response.text to dictionary
-        parsed_response = json.loads(response.text)  # class to dict
-        return parsed_response  # define parsed response
+    # def process_ticker(selected_stock):
+    #     request_url = getting_url(symbol)  # requesting
 
-    def transform_response(parsed_response):
+    #     # parse use the json module called jason.loads to change response.text to dictionary
+    #     e  # define parsed response
+
+    def change_response(parsed_response):
         time_series = parsed_response["Time Series (Daily)"]
         rows = []  # professor reosetti's robo example demo
         for date, daily_prices in time_series.items():
@@ -61,6 +66,9 @@ def main():
             }
             rows.append(row)
         return rows
+
+    def usd_price(last_closing_price):
+        return f"${last_closing_price:,.2f}"  # usd conversion
 
     def write_to_csv(rows, csv_file_Path):
         csv_headers = ["timestamp", "open", "high", "low", "close", "volume"]
@@ -76,28 +84,24 @@ def main():
 
         # timestamp, open, high, low, close, volume
 
-    def usd_price(last_closing_price):
-        return f"${last_closing_price:,.2f}"  # usd conversion
-
     # USER INPUT
 
     if __name__ == "__main__":  # revisited rock-paper and input module
         while True:
-            selected_stock = input(
+            symbol_input = input(
                 "Please enter the company symbol to access information: ")
             # fixed to acccept both lower and upper level alhabetical values, length of 4 or less.
-            if len(selected_stock) > 4 or not re.match("^[A-Za-z]*$", selected_stock):
+            if len(symbol_input) > 4 or not re.match("^[A-Za-z]*$", symbol_input):
                 print("Invalid ticker, please Re-enter:")
             else:
-                if selected_stock == process_ticker(selected_stock):
-                    process_ticker(selected_stock)
+                getting_url(symbol_input)
 
-                elif "KeyError" in process_ticker(selected_stock):
-                    print("Stock could not be found, please enter a valid ticker!")
+            if "error" in getting_url(symbol_input):
+                print("Stock could not be found, please enter a valid ticker!")
                 # tried to replicate error checking from hiepnguneyen and megc on Github but is not working
-                else:
-                    break
-
+            else:
+                break
+            #ERROR NOT WORKING
             # try:
             #     data = process_ticker(selected_stock)
             # except KeyError:
@@ -107,11 +111,12 @@ def main():
             #     break
 
         # followed Professor Rosetti's guided video
-        parsed_response = process_ticker(selected_stock)
+        parsed_response = getting_url(symbol_input)
+
         last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
-        rows = transform_response(parsed_response)  # define for write.csv
-        row = transform_response(parsed_response)  # define for plottin
-        # matching the name from above def transform_response
+        rows = change_response(parsed_response)  # define for write.csv
+        row = change_response(parsed_response)  # define for plottin
+        # matching the name from above change_response
         time_series = parsed_response["Time Series (Daily)"]
 
         dates = list(time_series.keys())
@@ -140,12 +145,12 @@ def main():
 
         write_to_csv(rows, csv_file_path)
 
-        formatted_csv_filepath = csv_file_path.split(
+        f_csv_filepath = csv_file_path.split(
             "..")[1]  # adopted from Prof Rosetti
 
         print("*****************************************************")
         # referenced geeksforgeeks upper-lower input applications
-        print("SELECTED SYMBOL:" + selected_stock.upper())
+        print("SELECTED SYMBOL:" + symbol_input.upper())
         print("*****************************************************")
         print("REQUESTING STOCK MARKET DATA...")
         print("REQUEST TIME: " + " " + now.strftime("%Y-%m-%d %H:%M:%S"))
@@ -157,7 +162,7 @@ def main():
         print(f"RECENT LOW: {usd_price(float(recent_lowest))}")
 
         print("*****************************************************")
-        print("YOU CAN ACCESS DATA VIA:" + str(csv_file_path))
+        print(f"YOU CAN ACCESS DATA VIA: {f_csv_filepath}")
         print("*****************************************************")
         print("*****************************************************")
         print("*****************************************************")
@@ -195,7 +200,7 @@ def main():
                 plt.ylabel('Daily Close Price', fontsize=12)
                 # referenced geeksforgeeks upper-lower input applications
                 plt.title('Last Quarter Prices: ' +
-                          selected_stock.upper(), fontsize=18)
+                          symbol_input.upper(), fontsize=18)
                 plt.show()
                 break
             else:
