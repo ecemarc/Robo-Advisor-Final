@@ -89,8 +89,13 @@ def main():  # DDEFINE FOR OPTION TO START OVER
 
         # followed Professor Rosetti's guided video
         parsed_response = getting_url(symbol_input)
+        # IMPORTANT: IF YOU RUN INTO KEYERROR DUE TO BELOW LINE, PLEASE UNTAG THE THREE LINES TO GET AN OUTPUT.TXT FILE DETAILING THE ERROR. IT HAPPENS DUE TO LIMITATIONS OF THE API
+        # text_file = open("Output.txt", "w")
+        # text_file.write(json.dumps(parsed_response))
+        # text_file.close()
 
         last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+
         rows = change_response(parsed_response)  # define for write.csv
         row = change_response(parsed_response)  # define for plottin
         # matching the name from above change_response
