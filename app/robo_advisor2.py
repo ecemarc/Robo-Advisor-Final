@@ -6,6 +6,9 @@ def main():
 
 # my-secure-project/my_script.py
 
+    
+
+
     import requests
     import csv
     import os
@@ -27,11 +30,7 @@ def main():
     load_dotenv()  # > loads contents of the .env file into the script's environment
 
     api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
-    SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-    MY_ADDRESS = os.environ.get("MY_EMAIL_ADDRESS")
-
-    # > < class 'sendgrid.sendgrid.SendGridAPIClient >
-    client = SendGridAPIClient(SENDGRID_API_KEY)
+  
 
     # print(api_key)
 
@@ -109,6 +108,7 @@ def main():
             # # KEYerror code still not working!
             # else:
             #     break
+            
 
         # followed Professor Rosetti's guided video
         parsed_response = getting_url(symbol_input)
@@ -179,7 +179,7 @@ def main():
                 for cp in row:
                     closing_prices.append(cp["close"])
                 graph_dates = sorted(dates)
-                fig, ax = plt.subplots()
+                fig, ax = plt.subplots() #defiins ax variable
 
                 # used https://matplotlib.org/3.1.1/gallery/ticks_and_spines/tick-locators.html for linearlocator
                 ax.xaxis.set_major_locator(plt.LinearLocator(12))
@@ -255,32 +255,3 @@ def main():
 
 main()
 
-# to_emails = [To("em4063@ster.nyu.edu")]
-# subject = "E-Z Stock Acticity"
-# # html_content = "Hello, thank you for visiting us today. Below please find your search results for today:"
-# message = Mail(from_email=MY_ADDRESS, to_emails=MY_ADDRESS,
-#                subject=subject, html_content=html_content)
-
-# try:
-#     response = client.send(message)
-
-#     print("*****************************************************")
-#     # referenced geeksforgeeks upper-lower input applications
-#     print("SELECTED SYMBOL:" + selected_stock.upper())
-#     print("*****************************************************")
-#     print("REQUESTING STOCK MARKET DATA...")
-#     print("REQUEST TIME: " + " " + now.strftime("%Y-%m-%d %H:%M:%S"))
-
-#     print("*****************************************************")
-#     print(f"LATEST DAY: {last_refreshed}")
-#     print(f"LATEST CLOSE: {usd_price(float(last_closing_price))}")
-#     print(f"RECENT HIGH: {usd_price(float(recent_highest))}")
-#     print(f"RECENT LOW: {usd_price(float(recent_lowest))}")
-
-#     print("*****************************************************")
-#     print("YOU CAN ACCESS DATA VIA:" + str(csv_file_path))
-#     print("*****************************************************")
-#     print("*****************************************************")
-#     print("*****************************************************")
-# except Exception as e:
-#     print("OOPS", e.message)
