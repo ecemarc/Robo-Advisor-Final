@@ -191,42 +191,64 @@ def main():  # DDEFINE FOR OPTION TO START OVER
                 break
             # VALIDATING INPUT FOR ADVICE
         while True:
+            change = (float(last_closing_price) -
+                      float(recent_lowest))/float(last_closing_price)
+            # hardcoded this number (lowst was 6995 points, today 9700 points)
+            NASDAQ_change_since_lowest100 = 0.28
+            # difference with market change
+            item_flactuation = change-NASDAQ_change_since_lowest100
+            # https://kite.com/python/answers/how-to-format-a-number-as-a-percentage-in-python Changing to percentage
+            percentage = "{:.0%}".format(item_flactuation)
             advice_answer = input(
                 "WOULDYOU LIKE US TO EVALUATE THE RISK FOR YOU? PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO CONTINUE FOR OTHER OPTIONS: ")
             if advice_answer == "YES" or advice_answer == "yes":
-                if (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) >= 0.30:  # CALCULATION
+                if change >= 0.35:  # CALCULATION
+
                     print("*****************************************************")
                     print(
                         "INVESTMENT ADVICE: THIS IS A HIGH RISK STOCK. PLEASE BE CAUTIOUS! ")
+                    if percentage > str(10):
+                        print("FLACTUATION COMPARED TO MARKETS: " + percentage +
+                              ", THIS LOOKS EXTRA RISKY")
+                    elif percentage < str(10):
+                        print("FLACTUATION COMPARED TO MARKETS IS: " + percentage)
                     print("*****************************************************")
                     print(
                         "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
                     print("******************************************************")
                     break
-                elif (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) >= 0.20:
+                elif change > 0.28:  # CALCULATION
                     print("******************************************************")
                     print("INVESTMENT ADVICE: IN NORMAL CISRCUMSTANCES THIS WOULD BE CONSIDERED A HIGH RISK STOCK, CONSIDERING TODAY'S VOLATILE MARKETS, IT IS MEDIUM RISK, STILL BE CAUTIOUS! ")
+                    if percentage > str(8):
+                        print("FLACTUATION COMPARED TO MARKETS IS: " + percentage +
+                              ", ALTHOUGH MID TO HIG, THIS IS ON THE HIGHER RISK SIDE.")
+                    elif percentage < str(8):
+                        print("FLACTUATION COMPARED TO MARKETS IS: " + percentage +
+                              ", ALTHOUGH MID TO HIGh, THIS IS ON THE LOWER RISK SIDE.")
                     print("******************************************************")
                     print(
                         "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
                     print("******************************************************")
                     break
-                elif (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) < 0.11:
+                elif change > 0.18:  # CALCULATION
                     print("******************************************************")
                     print("iNVESTMENT ADVICE: THIS IS MED-LOW RISK STOCK. ")
+                    print("FLACTUATION COMPARED TO MARKETS: " + percentage)
                     print("******************************************************")
                     print(
                         "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
                     print("*******************************************************")
-
-                elif (float(last_closing_price)-float(recent_lowest))/float(last_closing_price) < 0.6:
+                    break
+                elif change > 0.10:  # CALCULATION
                     print("******************************************************")
                     print("INVESTMENT ADVICE: THIS IS LOW RISK STOCK ")
+                    print("FLACTUATION COMPARED TO MARKETS: " + percentage)
                     print("******************************************************")
                     print(
                         "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
                     print("*******************************************************")
-
+                    break
             else:
                 print("*******************************************************")
                 print(
