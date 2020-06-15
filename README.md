@@ -1,11 +1,9 @@
-# Robo-Advisor-Final
-
-# ROBO-ADVISOR-6.12.20
 
 WELCOME TO E-Z STOCK ADVISORY. THIS PROGRAM WILL GIVE YOU STOCK INFORMATION AND INVESTMENT ADVICE BASED ON CURRENT MARKET  TRENDS. 
 IMPORT FOLLOWING MODULES:
 
-Prerequisites:
+PREREQUISITS: 
+
 Anaconda 3.7
 Python 3.7
 Pip
@@ -34,5 +32,21 @@ PACKAGES:
     import matplotlib.ticker as ticker
     import datetime
 
+
+
+INSTALLATION:
+
+1.Clone repo to your computer:
+    https://github.com/ecemarc/Robo-Advisor-Final
+
+2.Create an .env file to secure the API KEY(s)
+
+
 TO START: 
-    Oncce you are Done with this step please navigate from your command line to the repository and run the script: python app/robo_advisor.py
+Oncce you are Done with this step please navigate from your command line to the repository and run the script: python app/robo_advisor2.py
+
+
+
+LICENCE:
+
+The repository is licenced under MIT Licence. 
