@@ -43,8 +43,13 @@ INSTALLATION:
 
 
 TO START: 
-Oncce you are Done with this step please navigate from your command line to the repository and run the script: python app/robo_advisor2.py
+Once you are Done with this step please navigate from your command line to the repository and run the script: python app/robo_advisor2.py
 
+FEATURES:
+
+1.Once you run the script, it will ask you to enter a valid stock ticker and print the latest informaion for it. 
+2.It will give you an option to view a graph of the prices.
+3.It will ask you if you want any advice for now. you can exit the code at this point or continue after with another stock ticker.   
 
 
 LICENCE:

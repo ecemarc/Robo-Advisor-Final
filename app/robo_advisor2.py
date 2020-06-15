@@ -169,7 +169,7 @@ def main():
 
         while True:
             line_graph = input(
-                "IF A GRAPH WOULD BE HELPFUL PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO CONTINUE FOR OTHER OPTIONS: ")
+                "IF A GRAPH WOULD BE HELPFUL PLEASE ENTER YES OR OTHERWISE PRESS ANY KEY TO EXIT: ")
             if line_graph == "YES" or line_graph == "yes":
                 print("*****************************************************")
                 print(
@@ -244,12 +244,19 @@ def main():
                     print("*******************************************************")
 
             else:
+                print("*******************************************************")
+                print(
+                        "GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
+                print("*******************************************************")
                 exit()
 
-    restart = input("if you would like to start over please enter YES?")
+    restart = input("If you would like to start over please enter YES, otherwise press any other key to exit?")
     if restart == "yes" or restart == "YES":
         main()
     else:
+        print("*******************************************************")
+        print("GOOD LUCK WITH YOUR INVESTMENTS PLEASE VISIT US AGAIN FOR MORE MARKET DRIVEN ADVICE ON STOCKS!")
+        print("*******************************************************")
         exit()
 
 
