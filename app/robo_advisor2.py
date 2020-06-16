@@ -10,9 +10,6 @@ def main():  # DDEFINE FOR OPTION TO START OVER
     import json
     from dotenv import load_dotenv
 
-    from sendgrid import SendGridAPIClient
-    from sendgrid.helpers.mail import Mail
-    from sendgrid.helpers.mail import Mail, From, To, Subject, PlainTextContent, HtmlContent, SendGridException
     import datetime
     import matplotlib
     import matplotlib.pyplot as plt
@@ -90,9 +87,9 @@ def main():  # DDEFINE FOR OPTION TO START OVER
         # followed Professor Rosetti's guided video
         parsed_response = getting_url(symbol_input)
         # IMPORTANT: IF YOU RUN INTO KEYERROR DUE TO BELOW LINE, PLEASE UNTAG THE THREE LINES TO GET AN OUTPUT.TXT FILE DETAILING THE ERROR. IT HAPPENS DUE TO LIMITATIONS OF THE API
-        # text_file = open("Output.txt", "w")
-        # text_file.write(json.dumps(parsed_response))
-        # text_file.close()
+        # text_file = open("Output.txt", "w")  ----remove hashtag to see error test in output
+        # text_file.write(json.dumps(parsed_response)) ----remove hashtag to see error test in output
+        # text_file.close() ----remove hashtag to see error test in output
 
         last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 

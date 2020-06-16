@@ -1,6 +1,6 @@
 
-WELCOME TO E-Z STOCK ADVISORY. THIS PROGRAM WILL GIVE YOU STOCK INFORMATION AND INVESTMENT ADVICE BASED ON CURRENT MARKET  TRENDS. 
-IMPORT FOLLOWING MODULES:
+WELCOME TO E-Z STOCK ADVISORY. THIS PROGRAM WILL GIVE YOU STOCK INFORMATION AND INVESTMENT ADVICE BASED ON CURRENT MARKET TRENDS. 
+
 
 PREREQUISITS: 
 
@@ -50,6 +50,7 @@ FEATURES:
 1.Once you run the script, it will ask you to enter a valid stock ticker and print the latest informaion for it. 
 2.It will give you an option to view a graph of the prices.
 3.It will ask you if you want any advice for now. you can exit the code at this point or continue after with another stock ticker. 
+
 
 API LIMITATIONS:
 The APO key provided will be limited to 5 calls per minute and 500 calls per day, so it s likely to runinto KeyError with parsed_response. To make sure the error is caused due to limiations please activate the below lines in the code to generate an output.txt file.
